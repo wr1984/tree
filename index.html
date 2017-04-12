@@ -37,9 +37,9 @@
 			var windowScale = width/height;
 //			var svg = document.querySelector('svg');
 			
-			var tree_bg = document.querySelector('#tree-bg');
+			var embed = document.querySelector('#tree-bg');
 			
-			var svg_bg = tree_bg.getSVGDocument().querySelector('#svg');
+			var svg_bg = embed.getSVGDocument().querySelector('#svg');
 
 			var yz1 = svg_bg.getElementById('yz1');
 			var yz2 = svg_bg.getElementById('yz2');
@@ -60,19 +60,30 @@
 				TweenMax.set(item,{
 					transformOrigin:tfOrigin[index]
 				});
-				TweenMax.from(item,randomInRange(5,20),{
-					scale:0,
-					ease: Linear.easeNone
-				});
-				TweenMax.to(item,10,{
-					repeat:-1,
-					yoyo:true,
-					rotation:5,
-					delay:8,
-					ease: Back.easeInOut.config(4)
-				});
+				grow(item);
+//				afterGrow(item);
 			});
 			
+			
+			function grow(element,time){
+				TweenMax.from(element,randomInRange(5,20),{
+					scale:0,
+					ease: Linear.easeNone,
+					delay:time || 2
+				});
+
+			}
+			
+			function afterGrow(element){
+				TweenMax.from(element,10,{
+					repeat:-1,
+					yoyo:true,
+					rotation:10,
+					delay:8,
+					ease: Back.easeInOut.config(2),
+					repeatDelay:randomInRange(1,10)
+				});
+			}
 			//抖动
 //			TweenLite.to([yz1,yz3,yz4],2,{
 //				ease:Elastic.easeOut.config(1, 0.2),
@@ -88,25 +99,37 @@
 //				delay:8
 //			});
 			function shake(){
-				var temp = randomInRange(0,8);
 				sucai.forEach(function(item,index){
-					if(index === temp){
-						TweenMax.killTweensOf(item);
-						TweenLite.to(item,2,{
-							ease:Elastic.easeOut.config(1, 0.2),
+//					TweenMax.killTweensOf(item);
+					if(!TweenMax.isTweening(item)){
+						TweenMax.to(item,0.5,{
+							ease:Elastic.easeIn.config(1, 0.2),
 							rotation:20,
-							delay:0.5
+							repeat:1,
+							yoyo:true,
+//							delay:0.2
+							onComplete:fall,
+							onCompleteParams:[item]
 						});
-						
+//						afterGrow(item);
 					}
 				})
 			}
 			
-			function fall(){
-				
+//			var t1 = new TimelineMax();
+			function fall(item){
+				if(Math.random()>0.2){
+					TweenMax.to(item,5,{
+						y:500,
+						rotation:180,
+						ease:Linear.easeOut,
+						onComplete:grow,
+						onConmpleteParams:[item,5]
+					});
+				}
 			}
 			
-			window.addEventListener('mousedown',shake,false);
+			svg_bg.addEventListener('mousedown',shake,false);
 			
 			function randomInRange(min,max){
 				return Math.round(Math.random()*(max-min+1))+min;
