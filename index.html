@@ -30,6 +30,7 @@
 	<script src="lib/TweenMax.min.js" type="text/javascript" charset="utf-8"></script>
 	<script>
 		window.onload = function() {
+//			var me = this;
 			var SVG_NS = "http://www.w3.org/2000/svg";
 			var XLINK_NS = "http://www.w3.org/1999/xlink";
 			var width = window.innerWidth;
@@ -40,115 +41,179 @@
 			var embed = document.querySelector('#tree-bg');
 			
 			var svg_bg = embed.getSVGDocument().querySelector('#svg');
-
-			var yz1 = svg_bg.getElementById('yz1');
-			var yz2 = svg_bg.getElementById('yz2');
-			var yz3 = svg_bg.getElementById('yz3');
-			var yz4 = svg_bg.getElementById('yz4');
-			var yz5 = svg_bg.getElementById('yz5');
-			var sg1 = svg_bg.getElementById('sg1');
-			var sg2 = svg_bg.getElementById('sg2');
-			var sg3 = svg_bg.getElementById('sg3');
-			var sg4 = svg_bg.getElementById('sg4');
-			var bg = svg_bg.getElementById('bg');
+			var svg_width = svg_bg.getAttribute('viewBox').split(" ")[2];
+			var svg_height = svg_bg.getAttribute('viewBox').split(" ")[3];
+			var scaleX = svg_width/width;
+			var scaleY = svg_height/height;
 			
-			var sucai = [yz1,yz2,yz3,yz4,yz5,sg1,sg2,sg3,sg4];
-			var tfOrigin = ["0% 80%","90% 90%","10% 90%","10% 90%","90% 10%","0% 100%","10% 100%","0% 100%","0% 100%"];
-//			var t1 = new TimelineMax();
-			//生长
-			sucai.forEach(function(item,index){
-				TweenMax.set(item,{
-					transformOrigin:tfOrigin[index]
-				});
-				grow(item);
-//				afterGrow(item);
+			
+			
+//			var yz1 = svg_bg.getElementById('yz1');
+//			console.log(yz1)
+//			var yz2 = svg_bg.getElementById('yz2');
+//			var yz3 = svg_bg.getElementById('yz3');
+//			var yz4 = svg_bg.getElementById('yz4');
+//			var yz5 = svg_bg.getElementById('yz5');
+//			var sg1 = svg_bg.getElementById('sg1');
+//			var sg2 = svg_bg.getElementById('sg2');
+//			var sg3 = svg_bg.getElementById('sg3');
+//			var sg4 = svg_bg.getElementById('sg4');
+//			var bg = svg_bg.getElementById('bg');
+			
+			
+//			var sucai = [yz1,yz2,yz3,yz4,yz5,sg1,sg2,sg3,sg4];
+			
+			var yzOrigin = ["0% 80%","90% 90%","10% 90%","10% 90%","90% 10%"];
+			var sgOrigin = ["0% 100%","10% 100%","0% 100%","0% 100%"];
+			
+			var yzArr = initSucai('yz', 5, yzOrigin);
+			var sgArr = initSucai('sg', 4, sgOrigin);
+			var sucaiArr = yzArr.concat(sgArr);
+			
+			yzArr.forEach(function(yz){
+//				console.log(yz)
+				yz.init();
+				yz.grow(randomInRange(5,20),randomInRange(1,5));
+			});
+			sgArr.forEach(function(sg){
+				sg.init();
+				sg.grow(randomInRange(5,10),randomInRange(1,5));
 			});
 			
-			
-			function grow(element,time){
-				TweenMax.from(element,randomInRange(5,20),{
-					scale:0,
-					ease: Linear.easeNone,
-					delay:time || 2
-				});
-
+			function initSucai(name,count,origin){
+				var arr = [];
+				for(var i = 0; i<count; i++){
+					arr.push(new SucaiObj(name,i+1,origin));
+				}
+				return arr;
 			}
 			
-			function afterGrow(element){
-				TweenMax.from(element,10,{
-					repeat:-1,
-					yoyo:true,
-					rotation:10,
-					delay:8,
-					ease: Back.easeInOut.config(2),
-					repeatDelay:randomInRange(1,10)
-				});
-			}
-			//抖动
-//			TweenLite.to([yz1,yz3,yz4],2,{
-//				ease:Elastic.easeOut.config(1, 0.2),
-//				rotation:10,
-//				delay:8
-//			});
+			function SucaiObj(name,index,origin){
+				
+				this.id = name+index;
+				this.name = name;
+				this.el = svg_bg.getElementById(this.id); 
+				this.x;
+				this.y;
+				this.opacity = 0.8;
+				this.scale = 0;
+				this.transformOrigin = origin[index-1];
+				this.isFall = false;
 			
-//			TweenMax.to([yz1,yz3],2,{
-////				ease:Elastic.easeOut.config(1, 0.2),
-//				repeat:-1,
-//				yoyo:true,
-//				rotation:10,
-//				delay:8
-//			});
-			function shake(){
-				sucai.forEach(function(item,index){
-//					TweenMax.killTweensOf(item);
-					if(!TweenMax.isTweening(item)){
-						TweenMax.to(item,0.5,{
-							ease:Elastic.easeIn.config(1, 0.2),
-							rotation:20,
-							repeat:1,
-							yoyo:true,
-//							delay:0.2
-							onComplete:fall,
-							onCompleteParams:[item]
+				SucaiObj.prototype.init = function(){
+					TweenMax.set(this.el,{
+						opacity: this.opacity,
+						scale: this.scale,
+						transformOrigin: this.transformOrigin
+					});
+					this.x = this.el.getAttribute('data-svg-origin').split(" ")[0];
+					this.y = this.el.getAttribute('data-svg-origin').split(" ")[1];
+				}
+				SucaiObj.prototype.grow = function(growTime,delayTime,scale,startAt){
+					
+						TweenMax.to(this.el,growTime || 10,{
+							scale: scale || 1,
+							ease:Linear.easeNone,
+							delay:delayTime || 2,
+							startAt:startAt
 						});
-//						afterGrow(item);
+						
+//						console.log(yz1)
+				}
+				SucaiObj.prototype.shake = function(s){
+					if(!this.isFall){
+					  TweenMax.killTweensOf(this.el);
+					  new TimelineMax().to(this.el, .2, {rotation:10+s||0, ease:Linear.easeInOut})
+								       .to(this.el, .3, {rotation:-10-s||0, ease:Linear.easeInOut})
+								       .to(this.el, .4, {rotation:8, ease:Linear.easeInOut})
+								       .to(this.el, .5, {rotation:-8, ease:Linear.easeInOut})
+								       .to(this.el, .6, {rotation:6, ease:Linear.easeInOut})
+								       .to(this.el, .7, {rotation:-6, ease:Linear.easeInOut})
+								       .to(this.el, .8, {rotation:2, ease:Linear.easeInOut})
+								       .to(this.el, .9, {rotation:-2, ease:Linear.easeInOut})
+								       .to(this.el, .9, {rotation:1, ease:Linear.easeInOut})
+								       .to(this.el, 1, {rotation:0, ease:Linear.easeInOut})						       
 					}
-				})
-			}
-			
-//			var t1 = new TimelineMax();
-			function fall(item){
-				if(Math.random()>0.2){
-					TweenMax.to(item,5,{
+				}
+				SucaiObj.prototype.fall = function(){
+					TweenMax.killTweensOf(this.el);
+					var t = new TimelineMax();
+					t.to(this.el,5,{
 						y:500,
 						rotation:180,
-						ease:Linear.easeOut,
-						onComplete:grow,
-						onConmpleteParams:[item,5]
+						ease:SlowMo.ease.config(0.1, 0.4, false),
+						onComplete:this.reGrow,
+						onCompleteParams:[this]
+					})
+					.to(this.el,2,{
+						x:20,
+						ease:SlowMo.ease.config(0.1,0.4,false),
+						repeat:3,
+						yoyo:true
+					},"-=5")
+					.to(this.el,.1,{
+						x:0,
+					})
+				}
+				
+				SucaiObj.prototype.reGrow = function(obj){
+					obj.isFall = false
+					obj.grow(randomInRange(5,20),randomInRange(5,10),Math.random()+0.5, {
+							transform:'matrix(0,0,0,0,' + obj.x + ',' + obj.y + ')',
+							scale:0
 					});
 				}
 			}
 			
-			svg_bg.addEventListener('mousedown',shake,false);
+			function sucaiShake(e){
+				var x = e.clientX * scaleX;
+				var y = e.clientY * scaleY;
+				sucaiArr.forEach(function(sucai){
+					if(Math.abs(x-sucai.x)<20 && Math.abs(y-sucai.y)<20){
+//						console.log(Math.abs(x-sucai.x)+"__"+Math.abs(y-sucai.y))
+						sucai.shake(9);
+						if(Math.random()>0.9){
+							sucai.isFall = true;
+							sucai.fall();
+						}
+					}
+					
+				});
+				
+			}
 			
+			svg_bg.addEventListener('mousemove',sucaiShake,false);
+//			
 			function randomInRange(min,max){
 				return Math.round(Math.random()*(max-min+1))+min;
 			}
 			
-			function use(origin){
-				var useTag = document.createElementNS(SVG_NS,'use');
-				useTag.setAttributeNS(XLINK_NS,'xlink:href','#'+origin.id);
-				return useTag;
-			}
-			
-			function randerShape(shape,x,y,rotate){
-				var useShape = use(shape);
-				useShape.setAttribute('x',x);
-				useShape.setAttribute('y',y);
-//				useShape.setAttribute('transform','translate(' + x +','+y +')');
-				tree_bg.appendChild(useShape);
-				return useShape;
-			}
+//			function use(origin){
+//				var useTag = document.createElementNS(SVG_NS,'use');
+//				useTag.setAttributeNS(XLINK_NS,'xlink:href','#'+origin.id);
+//				return useTag;
+//			}
+//			
+//			function randerShape(shape,x,y,rotate){
+//				var useShape = use(shape);
+//				useShape.setAttribute('x',x);
+//				useShape.setAttribute('y',y);
+////				useShape.setAttribute('transform','translate(' + x +','+y +')');
+//				tree_bg.appendChild(useShape);
+//				return useShape;
+//			}
+
+			setInterval(function(){
+				sucaiArr.forEach(function(sucai){
+					if(Math.random()>0.5 && !TweenMax.isTweening(sucai)){
+						sucai.shake(randomInRange(-5,10));
+						if(Math.random()>0.85){
+							sucai.isFall = true;
+							sucai.fall();
+						}
+					}
+				});
+			},25000)
 		};
 	</script>
 
