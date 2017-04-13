@@ -135,9 +135,9 @@
 								       .to(this.el, 1, {rotation:0, ease:Linear.easeInOut})						       
 					}
 				}
-				SucaiObj.prototype.fall = function(){
+				SucaiObj.prototype.fall = function(t){
 					TweenMax.killTweensOf(this.el);
-					var t = new TimelineMax();
+					var t = new TimelineMax({delay:t||0});
 					t.to(this.el,5,{
 						y:500,
 						rotation:180,
@@ -174,7 +174,7 @@
 						sucai.shake(9);
 						if(Math.random()>0.9){
 							sucai.isFall = true;
-							sucai.fall();
+							sucai.fall(0.6);
 						}
 					}
 					
@@ -209,7 +209,7 @@
 						sucai.shake(randomInRange(-5,10));
 						if(Math.random()>0.85){
 							sucai.isFall = true;
-							sucai.fall();
+							sucai.fall(2);
 						}
 					}
 				});
