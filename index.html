@@ -48,30 +48,34 @@
 			
 			
 			
-//			var yz1 = svg_bg.getElementById('yz1');
-//			console.log(yz1)
-//			var yz2 = svg_bg.getElementById('yz2');
-//			var yz3 = svg_bg.getElementById('yz3');
-//			var yz4 = svg_bg.getElementById('yz4');
-//			var yz5 = svg_bg.getElementById('yz5');
-//			var sg1 = svg_bg.getElementById('sg1');
+//			var yz6 = svg_bg.getElementById('yz6');
+//			var yz7 = svg_bg.getElementById('yz7');
+//			var yz8 = svg_bg.getElementById('yz8');
+//			var yz9 = svg_bg.getElementById('yz9');
+//			var yz10 = svg_bg.getElementById('yz10');
+//			var sg5 = svg_bg.getElementById('sg5');
+//			
+//			Tween.to(yz6,2,{
+//				scale:1,
+//				transformOrigin:"0% 100%"
+//			})
+			
+			
 //			var sg2 = svg_bg.getElementById('sg2');
 //			var sg3 = svg_bg.getElementById('sg3');
 //			var sg4 = svg_bg.getElementById('sg4');
 //			var bg = svg_bg.getElementById('bg');
 			
 			
-//			var sucai = [yz1,yz2,yz3,yz4,yz5,sg1,sg2,sg3,sg4];
 			
-			var yzOrigin = ["0% 80%","90% 90%","10% 90%","10% 90%","90% 10%"];
-			var sgOrigin = ["0% 100%","10% 100%","0% 100%","0% 100%"];
+			var yzOrigin = ["0% 80%","90% 90%","10% 90%","10% 90%","90% 10%","0% 100%","0% 100%","100% 100%","100% 100%","100% 100%"];
+			var sgOrigin = ["0% 100%","10% 100%","0% 100%","0% 100%","0% 100%"];
 			
-			var yzArr = initSucai('yz', 5, yzOrigin);
-			var sgArr = initSucai('sg', 4, sgOrigin);
+			var yzArr = initSucai('yz', 10, yzOrigin);
+			var sgArr = initSucai('sg', 5, sgOrigin);
 			var sucaiArr = yzArr.concat(sgArr);
 			
 			yzArr.forEach(function(yz){
-//				console.log(yz)
 				yz.init();
 				yz.grow(randomInRange(5,20),randomInRange(1,5));
 			});
