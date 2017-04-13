@@ -162,7 +162,7 @@
 				
 				SucaiObj.prototype.reGrow = function(obj){
 					obj.isFall = false
-					obj.grow(randomInRange(5,20),randomInRange(5,10),Math.random()+0.5, {
+					obj.grow(randomInRange(5,20),randomInRange(1,5),Math.random()+0.5, {
 							transform:'matrix(0,0,0,0,' + obj.x + ',' + obj.y + ')',
 							scale:0
 					});
