@@ -329,7 +329,7 @@ TweenLite.killTweensOf( target:Object, complete:Boolean = false, vars:Object = n
 		             delayedCalls：如果为真，所有暂停的延迟函数都会继续
 		             
 
-TimelineLite实例属性
+### TimelineLite实例属性
 
 currentProgress:Number[读写]  用来设置或读取动画的进程度.例如0表示开始，0.5表示一半，1表示完成。totalProgress在TimelineLite中与currentProgress含义相同，但在TimelineMax中，totalProgress会把循环以及循环间隔包括在内。
 
@@ -343,7 +343,7 @@ useFrame:Boolean[读]  是否启用帧模式
 
  
 
-TimelineLite实例方法
+### TimelineLite实例方法
 
 TimelineLite( vars:Object = null )
 
