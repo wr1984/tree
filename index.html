@@ -11,6 +11,8 @@
 				padding: 0;
 				line-height: 0;
 				font-size: 0;
+				width: 100%;
+				height: 100%;
 			}
 			
 			#tree-sucai {
@@ -18,15 +20,24 @@
 				top: 0;
 				left: 0;
 			}
+			
+			.tree-bg {
+				background-image: url(img/tree.png);
+				background-position:left top;
+				background-repeat: no-repeat;
+				background-size:100% 100%;				 
+			}
 		</style>
 	</head>
 
 	<body>
 		<!--<img src="img/Tree.png" />-->
 		<!--<svg width="100%" height="100%" viewBox="0 0 1000 800" version="1.1" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMinYMin meet">-->
-
-		<embed id="tree-bg" src="img/tree-bg-d.svg" width="100%" height="100%"></embed>
-	</body>
+		<div class="tree-bg">
+			
+		</div>
+<!--		<embed id="tree-bg" src="img/tree-bg-d.svg" width="100%" height="100%"></embed>
+-->	</body>
 	<script src="lib/TweenMax.min.js" type="text/javascript" charset="utf-8"></script>
 	<script>
 		window.onload = function() {
@@ -35,16 +46,24 @@
 			var XLINK_NS = "http://www.w3.org/1999/xlink";
 			var width = window.innerWidth;
 			var height = window.innerHeight;
+			var treebg = document.querySelector('.tree-bg');
+			treebg.style.color = 'red';
+			treebg.style.width = width + 'px';
+			treebg.style.height = height + 'px';
+//			treebg.setAttribute('background-image','url(img/tree.png)');
+//			treebg.setAttribute('background-position','left top');
+//			treebg.setAttribute('background-repeat','no-repeat');
+
 			var windowScale = width/height;
 //			var svg = document.querySelector('svg');
 			
-			var embed = document.querySelector('#tree-bg');
-			
-			var svg_bg = embed.getSVGDocument().querySelector('#svg');
-			var svg_width = svg_bg.getAttribute('viewBox').split(" ")[2];
-			var svg_height = svg_bg.getAttribute('viewBox').split(" ")[3];
-			var scaleX = svg_width/width;
-			var scaleY = svg_height/height;
+//			var embed = document.querySelector('#tree-bg');
+//			
+//			var svg_bg = embed.getSVGDocument().querySelector('#svg');
+//			var svg_width = svg_bg.getAttribute('viewBox').split(" ")[2];
+//			var svg_height = svg_bg.getAttribute('viewBox').split(" ")[3];
+//			var scaleX = svg_width/width;
+//			var scaleY = svg_height/height;
 			
 			
 			
@@ -74,18 +93,18 @@
 			var yzOrigin = ["100% 100%","100% 100%%","10% 90%","10% 90%","0% 100%","0% 100%","40% 100%","40% 100%","100% 100%","100% 100%","0% 100%","0% 100%","0% 100%","0% 100%"];
 			var sgOrigin = ["50% 100%","50% 100%","0% 100%","0% 100%","90% 100%","90% 100%","90% 100%","90% 100%"];
 			
-			var yzArr = initSucai('sy', 14, yzOrigin);
-			var sgArr = initSucai('sg', 8, sgOrigin);
-			var sucaiArr = yzArr.concat(sgArr);
+//			var yzArr = initSucai('sy', 14, yzOrigin);
+//			var sgArr = initSucai('sg', 8, sgOrigin);
+//			var sucaiArr = yzArr.concat(sgArr);
 			
-			yzArr.forEach(function(yz){
-				yz.init();
-				yz.grow(randomInRange(5,20),randomInRange(1,5));
-			});
-			sgArr.forEach(function(sg){
-				sg.init();
-				sg.grow(randomInRange(5,10),randomInRange(1,5));
-			});
+//			yzArr.forEach(function(yz){
+//				yz.init();
+//				yz.grow(randomInRange(5,20),randomInRange(1,5));
+//			});
+//			sgArr.forEach(function(sg){
+//				sg.init();
+//				sg.grow(randomInRange(5,10),randomInRange(1,5));
+//			});
 			
 			function initSucai(name,count,origin){
 				var arr = [];
@@ -190,7 +209,7 @@
 				
 			}
 			
-			svg_bg.addEventListener('mousemove',sucaiShake,false);
+//			svg_bg.addEventListener('mousemove',sucaiShake,false);
 //			
 			function randomInRange(min,max){
 				return Math.round(Math.random()*(max-min+1))+min;
@@ -211,17 +230,17 @@
 //				return useShape;
 //			}
 
-			setInterval(function(){
-				sucaiArr.forEach(function(sucai){
-					if(Math.random()>0.5 && !TweenMax.isTweening(sucai)){
-						sucai.shake(-5,0.5);
-						if(Math.random()>0.85){
-							sucai.isFall = true;
-							sucai.fall(2);
-						}
-					}
-				});
-			},25000)
+//			setInterval(function(){
+//				sucaiArr.forEach(function(sucai){
+//					if(Math.random()>0.5 && !TweenMax.isTweening(sucai)){
+//						sucai.shake(-5,0.5);
+//						if(Math.random()>0.85){
+//							sucai.isFall = true;
+//							sucai.fall(2);
+//						}
+//					}
+//				});
+//			},25000)
 		};
 	</script>
 
