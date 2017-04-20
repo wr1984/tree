@@ -3,6 +3,7 @@
 
 	<head>
 		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
 		<title>Tree</title>
 		<style type="text/css">
 			html,
@@ -22,10 +23,20 @@
 			}
 			
 			.tree-bg {
+				/*width: 1200px;*/
+				/*display: block;*/
+				margin: 0 auto;
 				background-image: url(img/tree.png);
 				background-position:left top;
 				background-repeat: no-repeat;
 				background-size:100% 100%;				 
+			}
+			#yz0{
+				position: relative;
+				width: 100px;
+				height: 100px;
+				left: 160px;
+				top: 300px;
 			}
 		</style>
 	</head>
@@ -33,8 +44,8 @@
 	<body>
 		<!--<img src="img/Tree.png" />-->
 		<!--<svg width="100%" height="100%" viewBox="0 0 1000 800" version="1.1" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMinYMin meet">-->
-		<div class="tree-bg">
-			
+		<div class="tree-bg" style="width: 1280px; height: 800px;">
+			<!--<img id="yz0" src="img/yz0.png"/>-->
 		</div>
 <!--		<embed id="tree-bg" src="img/tree-bg-d.svg" width="100%" height="100%"></embed>
 -->	</body>
@@ -44,16 +55,16 @@
 //			var me = this;
 			var SVG_NS = "http://www.w3.org/2000/svg";
 			var XLINK_NS = "http://www.w3.org/1999/xlink";
-			var width = window.innerWidth;
-			var height = window.innerHeight;
+			var width = 1280;
+			var height =800;
 			var treebg = document.querySelector('.tree-bg');
-			treebg.style.color = 'red';
-			treebg.style.width = width + 'px';
-			treebg.style.height = height + 'px';
+			var scale = 1;
+//			treebg.style.width = width + 'px';
+//			treebg.style.height = height + 'px';
 //			treebg.setAttribute('background-image','url(img/tree.png)');
 //			treebg.setAttribute('background-position','left top');
 //			treebg.setAttribute('background-repeat','no-repeat');
-
+			
 			var windowScale = width/height;
 //			var svg = document.querySelector('svg');
 			
@@ -62,8 +73,8 @@
 //			var svg_bg = embed.getSVGDocument().querySelector('#svg');
 //			var svg_width = svg_bg.getAttribute('viewBox').split(" ")[2];
 //			var svg_height = svg_bg.getAttribute('viewBox').split(" ")[3];
-//			var scaleX = svg_width/width;
-//			var scaleY = svg_height/height;
+			var scaleX = 1;
+			var scaleY = 1;
 			
 			
 			
@@ -90,17 +101,19 @@
 //			var yzOrigin = ["0% 80%","90% 90%","10% 90%","10% 90%","90% 10%","0% 100%","0% 100%","100% 100%","100% 100%","100% 100%"];
 //			var sgOrigin = ["0% 100%","10% 100%","0% 100%","0% 100%","0% 100%"];
 			
-			var yzOrigin = ["100% 100%","100% 100%%","10% 90%","10% 90%","0% 100%","0% 100%","40% 100%","40% 100%","100% 100%","100% 100%","0% 100%","0% 100%","0% 100%","0% 100%"];
+			var yzOrigin = ["0% 100%","100% 100%%","10% 90%","10% 90%","0% 100%","0% 100%","40% 100%","40% 100%","100% 100%","100% 100%","0% 100%","0% 100%","0% 100%","0% 100%"];
 			var sgOrigin = ["50% 100%","50% 100%","0% 100%","0% 100%","90% 100%","90% 100%","90% 100%","90% 100%"];
+			var posArr = [[70,200]]
+			var yzArr = initSucai('yz',1,yzOrigin);
 			
 //			var yzArr = initSucai('sy', 14, yzOrigin);
 //			var sgArr = initSucai('sg', 8, sgOrigin);
 //			var sucaiArr = yzArr.concat(sgArr);
 			
-//			yzArr.forEach(function(yz){
-//				yz.init();
-//				yz.grow(randomInRange(5,20),randomInRange(1,5));
-//			});
+			yzArr.forEach(function(yz){
+				yz.init();
+				yz.grow(randomInRange(5,20),randomInRange(1,5));
+			});
 //			sgArr.forEach(function(sg){
 //				sg.init();
 //				sg.grow(randomInRange(5,10),randomInRange(1,5));
@@ -109,18 +122,24 @@
 			function initSucai(name,count,origin){
 				var arr = [];
 				for(var i = 0; i<count; i++){
-					arr.push(new SucaiObj(name,i,origin));
+//					var img = new Image().src = "img/yz"+i+".png";
+					var img = document.createElement('img');
+					img.setAttribute('src',"img/yz"+i+".png");
+					img.style.marginLeft = posArr[i][0]+'px';
+					img.style.marginTop = posArr[i][1]+'px';
+					treebg.appendChild(img);
+					arr.push(new SucaiObj(name,i,img,origin,posArr[i][0],posArr[i][1]));
 				}
 				return arr;
 			}
 			
-			function SucaiObj(name,index,origin){
+			function SucaiObj(name,index,el,origin,x,y){
 				
 				this.id = name+index;
 				this.name = name;
-				this.el = svg_bg.getElementById(this.id); 
-				this.x;
-				this.y;
+				this.el = el;
+				this.x = x;
+				this.y = y;
 				this.opacity = 0.8;
 				this.scale = 0;
 				this.transformOrigin = origin[index];
@@ -132,24 +151,30 @@
 						scale: this.scale,
 						transformOrigin: this.transformOrigin
 					});
-					this.x = this.el.getAttribute('data-svg-origin').split(" ")[0];
-					this.y = this.el.getAttribute('data-svg-origin').split(" ")[1];
+//					this.x = this.el.getAttribute('data-svg-origin').split(" ")[0];
+//					this.y = this.el.getAttribute('data-svg-origin').split(" ")[1];
 				}
 				SucaiObj.prototype.grow = function(growTime,delayTime,scale,startAt){
-					
+						TweenMax.killTweensOf(this.el);
 						TweenMax.to(this.el,growTime || 10,{
 							scale: scale || 1,
 							ease:Linear.easeNone,
 							delay:delayTime || 2,
-							startAt:startAt
+//							startAt:startAt
 						});
 						
 //						console.log(yz1)
 				}
 				SucaiObj.prototype.shake = function(s,t){
 					if(!this.isFall){
-					  TweenMax.killTweensOf(this.el);
-					  new TimelineMax().to(this.el, .2+t||0, {rotation:10+s||0, ease:Linear.easeInOut})
+//					  TweenMax.killTweensOf(this.el);
+//					  TweenMax.to(this.el,3,{
+//					  	rotation:30,
+//					  	repeat:1,
+//					  	yoyo:true,
+//					  	ease: Elastic.easeOut.config(1, 0.1)
+//					  })
+					  new TimelineMax().to(this.el, .2+t||0, {rotation:10+s||0, })
 								       .to(this.el, .3+t||0, {rotation:-10-s||0, ease:Linear.easeInOut})
 								       .to(this.el, .4+t||0, {rotation:8+s||0, ease:Linear.easeInOut})
 								       .to(this.el, .5+t||0, {rotation:-8-s||0, ease:Linear.easeInOut})
@@ -162,22 +187,35 @@
 					}
 				}
 				SucaiObj.prototype.fall = function(t){
-//					TweenMax.killTweensOf(this.el);
+					
 					var t = new TimelineMax({delay:t||0});
-					t.to(this.el,5,{
-						y:500,
-						rotation:180,
-						ease:SlowMo.ease.config(0.1, 0.4, false),
-						overwrite:3
+					t.to(this.el,20,{y:800,
+//						ease:RoughEase.ease.config({ template:  Power0.easeNone, strength: 1, points: 5, taper: "none", randomize: true, clamp: false}),
+//						ease:Power0.easeOut,
+//						onStart:function(){
+//							TweenMax.killTweensOf(this.el,true,{rotation:true});
+//						}
+//						overwrite:3
 					})
-					.to(this.el,2,{
-						x:120,
-						ease:SlowMo.ease.config(0.1,0.4,false),
-//						repeat:3,
-//						yoyo:true
-					},"-=5")
-					.to(this.el,.1,{
+//					.to(this.el,2,{rotation:130, repeat:3,yoyo:true},'-=19')
+			       .to(this.el, 4, {x:"+=100"},'-=20')
+			       .to(this.el, 4, {x:"-=100"},'-=16')
+			       .to(this.el, 4, {x:"+=100"},'-=12')
+
+			       
+				
+	
+//					.to(this.el,15,{
+//						rotation:360*randomInRange(1,3),
+//					},"-=18")
+					.set(this.el,{
 						x:0,
+						y:0,
+						rotation:0,
+						scale:0
+					})
+					.to(this.el,1,{
+
 						onComplete:this.reGrow,
 						onCompleteParams:[this]
 					})
@@ -185,17 +223,15 @@
 				
 				SucaiObj.prototype.reGrow = function(obj){
 					obj.isFall = false
-					obj.grow(randomInRange(5,20),randomInRange(1,5),Math.random()+0.5, {
-							transform:'matrix(0,0,0,0,' + obj.x + ',' + obj.y + ')',
-							scale:0
-					});
+					obj.grow(randomInRange(5,20),randomInRange(1,5),1);
 				}
 			}
 			
 			function sucaiShake(e){
-				var x = e.clientX * scaleX;
-				var y = e.clientY * scaleY;
-				sucaiArr.forEach(function(sucai){
+				var x = e.clientX;
+				var y = e.clientY;
+				
+				yzArr.forEach(function(sucai){
 					if(Math.abs(x-sucai.x)<20 && Math.abs(y-sucai.y)<20){
 //						console.log(Math.abs(x-sucai.x)+"__"+Math.abs(y-sucai.y))
 						sucai.shake(5,0);
@@ -208,8 +244,28 @@
 				});
 				
 			}
-			
-//			svg_bg.addEventListener('mousemove',sucaiShake,false);
+//			window.addEventListener('resize',resize,false);
+			function resize (){
+				width = window.innerWidth;
+				height = window.innerHeight;
+//				treebg.style.width = width + 'px';
+//				treebg.style.height = height + 'px';
+				var scaleX = width/1280;
+				var scaleY = height/800;
+				
+				yzArr.forEach(function(yz){
+					yz.el.style.marginLeft = yz.x*scaleX+'px';
+					yz.el.style.marginTop = yz.y*scaleY+'px';
+					TweenMax.set(yz.el,{
+						scaleX:scaleX,
+						scaleY:scaleY
+					})
+				})
+			}
+			treebg.addEventListener('mousemove',sucaiShake,false);
+			treebg.addEventListener('mousedown',function(e){
+				e.preventDefault();
+			},false);
 //			
 			function randomInRange(min,max){
 				return Math.round(Math.random()*(max-min+1))+min;
@@ -230,17 +286,17 @@
 //				return useShape;
 //			}
 
-//			setInterval(function(){
-//				sucaiArr.forEach(function(sucai){
-//					if(Math.random()>0.5 && !TweenMax.isTweening(sucai)){
-//						sucai.shake(-5,0.5);
-//						if(Math.random()>0.85){
-//							sucai.isFall = true;
-//							sucai.fall(2);
-//						}
-//					}
-//				});
-//			},25000)
+			setInterval(function(){
+				yzArr.forEach(function(sucai){
+					if(Math.random()>0.5 && !TweenMax.isTweening(sucai)){
+						sucai.shake(-5,0.5);
+						if(Math.random()>0.15){
+							sucai.isFall = true;
+							sucai.fall(2);
+						}
+					}
+				});
+			},25000)
 		};
 	</script>
 
