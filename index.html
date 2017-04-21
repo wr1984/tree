@@ -114,10 +114,10 @@
 //			var yzOrigin = ["0% 80%","90% 90%","10% 90%","10% 90%","90% 10%","0% 100%","0% 100%","100% 100%","100% 100%","100% 100%"];
 //			var sgOrigin = ["0% 100%","10% 100%","0% 100%","0% 100%","0% 100%"];
 			
-			var yzOrigin = ["0% 100%","100% 100%%","10% 90%","10% 90%","0% 100%","0% 100%","40% 100%","40% 100%","100% 100%","100% 100%","0% 100%","0% 100%","0% 100%","0% 100%"];
+			var yzOrigin = ["0% 100%","0% 100%%","10% 90%","10% 90%","0% 100%","0% 100%","40% 100%","40% 100%","100% 100%","100% 100%","0% 100%","0% 100%","0% 100%","0% 100%"];
 			var sgOrigin = ["50% 100%","50% 100%","0% 100%","0% 100%","90% 100%","90% 100%","90% 100%","90% 100%"];
-			var posArr = [[70,200]]
-			var yzArr = initSucai('yz',1,yzOrigin);
+			var posArr = [[100,200],[100,300]]
+			var yzArr = initSucai('yz',2,yzOrigin);
 			
 //			var yzArr = initSucai('sy', 14, yzOrigin);
 //			var sgArr = initSucai('sg', 8, sgOrigin);
@@ -138,6 +138,7 @@
 //					var img = new Image().src = "img/yz"+i+".png";
 					var img = document.createElement('img');
 					img.setAttribute('src',"img/yz"+i+".png");
+					console.log(img)
 					img.style.marginLeft = posArr[i][0]+'px';
 					img.style.marginTop = posArr[i][1]+'px';
 					treebg.appendChild(img);
@@ -180,7 +181,7 @@
 				}
 				SucaiObj.prototype.shake = function(s,t){
 					if(!this.isFall){
-//					  TweenMax.killTweensOf(this.el);
+					  TweenMax.killTweensOf(this.el);
 //					  TweenMax.to(this.el,3,{
 //					  	rotation:30,
 //					  	repeat:1,
@@ -241,10 +242,11 @@
 				}
 			}
 			
+			
 			function sucaiShake(e){
 				var x = e.clientX;
 				var y = e.clientY;
-				
+				console.log(x,y)
 				yzArr.forEach(function(sucai){
 //					console.log(sucai.x,sucai.y)
 //					console.log(Math.abs(x-sucai.x)+"__"+Math.abs(y-sucai.y))
@@ -311,7 +313,7 @@
 						}
 					}
 				});
-			},25000)
+			},20000)
 		};
 	</script>
 
