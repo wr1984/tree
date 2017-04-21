@@ -3,7 +3,6 @@
 
 	<head>
 		<meta charset="UTF-8">
-		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
 		<title>Tree</title>
 		<style type="text/css">
 			html,
@@ -56,7 +55,7 @@
 	<body>
 		<!--<img src="img/Tree.png" />-->
 		<!--<svg width="100%" height="100%" viewBox="0 0 1000 800" version="1.1" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMinYMin meet">-->
-		<div class="tree-bg" style="width: 1280px; height: 800px;">
+		<div class="tree-bg">
 			<div class="tree-logo-box"><img class="tree-logo" src="img/tree-logo.png" /></div>
 			<!--<img id="yz0" src="img/yz0.png"/>-->
 		</div>
@@ -68,12 +67,12 @@
 //			var me = this;
 			var SVG_NS = "http://www.w3.org/2000/svg";
 			var XLINK_NS = "http://www.w3.org/1999/xlink";
-			var width = 1280;
-			var height =800;
+			var width = window.innerWidth;
+			var height =window.innerHeight;
 			var treebg = document.querySelector('.tree-bg');
 			var scale = 1;
-//			treebg.style.width = width + 'px';
-//			treebg.style.height = height + 'px';
+			treebg.style.width = width + 'px';
+			treebg.style.height = height + 'px';
 //			treebg.setAttribute('background-image','url(img/tree.png)');
 //			treebg.setAttribute('background-position','left top');
 //			treebg.setAttribute('background-repeat','no-repeat');
@@ -114,9 +113,9 @@
 //			var yzOrigin = ["0% 80%","90% 90%","10% 90%","10% 90%","90% 10%","0% 100%","0% 100%","100% 100%","100% 100%","100% 100%"];
 //			var sgOrigin = ["0% 100%","10% 100%","0% 100%","0% 100%","0% 100%"];
 			
-			var yzOrigin = ["0% 100%","0% 100%%","10% 90%","10% 90%","0% 100%","0% 100%","40% 100%","40% 100%","100% 100%","100% 100%","0% 100%","0% 100%","0% 100%","0% 100%"];
+			var yzOrigin = ["0% 100%","0% 100%","10% 90%","10% 90%","0% 100%","0% 100%","40% 100%","40% 100%","100% 100%","100% 100%","0% 100%","0% 100%","0% 100%","0% 100%"];
 			var sgOrigin = ["50% 100%","50% 100%","0% 100%","0% 100%","90% 100%","90% 100%","90% 100%","90% 100%"];
-			var posArr = [[100,200],[100,300]]
+			var posArr = [[100,200],[100,250]]
 			var yzArr = initSucai('yz',2,yzOrigin);
 			
 //			var yzArr = initSucai('sy', 14, yzOrigin);
@@ -188,10 +187,10 @@
 //					  	yoyo:true,
 //					  	ease: Elastic.easeOut.config(1, 0.1)
 //					  })
-					  new TimelineMax().to(this.el, .2+t||0, {rotation:10+s||0, })
-								       .to(this.el, .3+t||0, {rotation:-10-s||0, ease:Linear.easeInOut})
-								       .to(this.el, .4+t||0, {rotation:8+s||0, ease:Linear.easeInOut})
-								       .to(this.el, .5+t||0, {rotation:-8-s||0, ease:Linear.easeInOut})
+					  new TimelineMax().to(this.el, .2+t||0, {rotation:15+s||0, })
+								       .to(this.el, .3+t||0, {rotation:-15-s||0, ease:Linear.easeInOut})
+								       .to(this.el, .4+t||0, {rotation:10+s||0, ease:Linear.easeInOut})
+								       .to(this.el, .5+t||0, {rotation:-10-s||0, ease:Linear.easeInOut})
 								       .to(this.el, .6+t||0, {rotation:6+s||0, ease:Linear.easeInOut})
 								       .to(this.el, .7+t||0, {rotation:-6-s||0, ease:Linear.easeInOut})
 								       .to(this.el, .8+t||0, {rotation:2, ease:Linear.easeInOut})
@@ -306,7 +305,7 @@
 			setInterval(function(){
 				yzArr.forEach(function(sucai){
 					if(Math.random()>0.5 && !TweenMax.isTweening(sucai)){
-						sucai.shake(-5,0.5);
+						sucai.shake(5,0);
 						if(Math.random()>0.15){
 							sucai.isFall = true;
 							sucai.fall(2);
