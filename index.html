@@ -18,14 +18,19 @@
 				top: 0;
 				left: 0;
 			}
+			#svg{
+				/*width: 1000px;
+				height: 500px;*/
+			}
 		</style>
 	</head>
 
 	<body>
 		<!--<img src="img/Tree.png" />-->
 		<!--<svg width="100%" height="100%" viewBox="0 0 1000 800" version="1.1" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMinYMin meet">-->
-
-		<embed id="tree-bg" src="img/tree-bg-d.svg" width="100%" height="100%"></embed>
+		<div id="svg" >
+			<embed id="tree-bg" src="img/tree-bg-d.svg" width="100%" height="100%"></embed>
+		</div>
 	</body>
 	<script src="lib/TweenMax.min.js" type="text/javascript" charset="utf-8"></script>
 	<script>
@@ -36,7 +41,10 @@
 			var width = window.innerWidth;
 			var height = window.innerHeight;
 			var windowScale = width/height;
-//			var svg = document.querySelector('svg');
+			var svgBox = document.querySelector('#svg');
+			svgBox.style.width = width + 'px';
+			svgBox.style.height = height + 'px';
+			
 			
 			var embed = document.querySelector('#tree-bg');
 			
@@ -163,7 +171,7 @@
 				
 				SucaiObj.prototype.reGrow = function(obj){
 					obj.isFall = false
-					obj.grow(randomInRange(5,20),randomInRange(1,5),Math.random()+0.5, {
+					obj.grow(randomInRange(5,20),randomInRange(1,5),1, {
 							transform:'matrix(0,0,0,0,' + obj.x + ',' + obj.y + ')',
 							scale:0
 					});
