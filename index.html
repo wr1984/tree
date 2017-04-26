@@ -19,7 +19,10 @@
 				top: 0;
 				left: 0;
 			}
-			#svg{
+			#svg>div{
+				float: left;
+				width: 50%;
+				height: 100%;
 				/*width: 1000px;
 				height: 500px;*/
 				/*background-image: url(img/tree-bg.png);*/
@@ -33,7 +36,12 @@
 		<!--<img src="img/Tree.png" />-->
 		<!--<svg width="100%" height="100%" viewBox="0 0 1000 800" version="1.1" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMinYMin meet">-->
 		<div id="svg" >
-			<embed id="tree-bg" src="img/tree-bg-d.svg" width="100%" height="100%"></embed>
+			<div>
+				<embed id="tree-bg" src="img/tree-bg-d.svg" width="100%" height="100%"></embed>
+			</div>
+			<div>
+				<embed id="tree-bg2" src="img/tree-bg-d.svg" width="100%" height="100%"></embed>
+			</div>
 		</div>
 	</body>
 	<script src="lib/TweenMax.min.js" type="text/javascript" charset="utf-8"></script>
@@ -46,7 +54,9 @@
 			var height = window.innerHeight;
 			var windowScale = width/height;
 			var svgBox = document.querySelector('#svg');
-			svgBox.style.width = width + 'px';
+			svgBox.style.position = 'relative';
+			svgBox.style.overflow = 'hidden';
+//			svgBox.style.width = width + 'px';
 			svgBox.style.height = height + 'px';
 //			svgBox.style.width = '1600px';
 //			svgBox.style.height = '700px';
@@ -54,6 +64,7 @@
 			
 			
 			var embed = document.querySelector('#tree-bg');
+			embed.style.float = 'left';
 			
 			var svg_bg = embed.getSVGDocument().querySelector('#svg');
 			var svg_width = svg_bg.getAttribute('viewBox').split(" ")[2];
@@ -61,7 +72,17 @@
 			var scaleX = svg_width/width;
 			var scaleY = svg_height/height;
 			
-			
+			//跑马灯
+//			svgBox.innerHTML += svgBox.innerHTML;
+			svgBox.style.width  = width*2 + 'px';
+			var left = null;
+			setInterval(function(){
+				left -= 1;
+				if(left < -svgBox.offsetWidth/2){
+					left=0;
+				}
+				svgBox.style.left = left + "px";
+			},60/1000)
 			
 //			var yz6 = svg_bg.getElementById('yz6');
 //			var yz7 = svg_bg.getElementById('yz7');
