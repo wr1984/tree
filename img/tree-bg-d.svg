@@ -1393,4 +1393,7 @@
 			C666,229.3,664.9,230.6,663,231.7z"/>
 	</g>
 </g>
+<g id="logo">
+	<image x="200" y="125" width="50%" height="50%" xlink:href="tree-logo.png" />
+</g>
 </svg>
