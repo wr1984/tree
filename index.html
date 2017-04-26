@@ -3,6 +3,7 @@
 
 	<head>
 		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
 		<title>Tree</title>
 		<style type="text/css">
 			html,
@@ -21,6 +22,9 @@
 			#svg{
 				/*width: 1000px;
 				height: 500px;*/
+				/*background-image: url(img/tree-bg.png);*/
+				/*background-size:auto 100%;
+				background-repeat:no-repeat;*/
 			}
 		</style>
 	</head>
@@ -44,6 +48,9 @@
 			var svgBox = document.querySelector('#svg');
 			svgBox.style.width = width + 'px';
 			svgBox.style.height = height + 'px';
+//			svgBox.style.width = '1600px';
+//			svgBox.style.height = '700px';
+
 			
 			
 			var embed = document.querySelector('#tree-bg');
@@ -133,45 +140,68 @@
 //						console.log(yz1)
 				}
 				SucaiObj.prototype.shake = function(s,t){
+					
+					
 					if(!this.isFall){
-					  TweenMax.killTweensOf(this.el);
-					  new TimelineMax().to(this.el, .2+t||0, {rotation:10+s||0, ease:Linear.easeInOut})
-								       .to(this.el, .3+t||0, {rotation:-10-s||0, ease:Linear.easeInOut})
-								       .to(this.el, .4+t||0, {rotation:8+s||0, ease:Linear.easeInOut})
-								       .to(this.el, .5+t||0, {rotation:-8-s||0, ease:Linear.easeInOut})
-								       .to(this.el, .6+t||0, {rotation:6+s||0, ease:Linear.easeInOut})
-								       .to(this.el, .7+t||0, {rotation:-6-s||0, ease:Linear.easeInOut})
-								       .to(this.el, .8+t||0, {rotation:2, ease:Linear.easeInOut})
-								       .to(this.el, .9+t||0, {rotation:-2, ease:Linear.easeInOut})
-								       .to(this.el, .9+t||0, {rotation:1, ease:Linear.easeInOut})
-								       .to(this.el, 1+t||0, {rotation:0, ease:Linear.easeInOut})						       
+//					  TweenMax.killTweensOf(this.el);
+					  new TimelineMax()
+					  .to(this.el, 10, {rotation:5, ease:Elastic.easeOut.config(3, 0.1)})
+//					  .to(this.el, 1, {rotation:0})
+					       
 					}
+//					if(!this.isFall){
+//					  TweenMax.killTweensOf(this.el);
+//					  new TimelineMax().to(this.el, .2+t||0, {rotation:10+s||0, ease:Linear.easeInOut})
+//								       .to(this.el, .3+t||0, {rotation:-10-s||0, ease:Linear.easeInOut})
+//								       .to(this.el, .4+t||0, {rotation:8+s||0, ease:Linear.easeInOut})
+//								       .to(this.el, .5+t||0, {rotation:-8-s||0, ease:Linear.easeInOut})
+//								       .to(this.el, .6+t||0, {rotation:6+s||0, ease:Linear.easeInOut})
+//								       .to(this.el, .7+t||0, {rotation:-6-s||0, ease:Linear.easeInOut})
+//								       .to(this.el, .8+t||0, {rotation:2, ease:Linear.easeInOut})
+//								       .to(this.el, .9+t||0, {rotation:-2, ease:Linear.easeInOut})
+//								       .to(this.el, .9+t||0, {rotation:1, ease:Linear.easeInOut})
+//								       .to(this.el, 1+t||0, {rotation:0, ease:Linear.easeInOut})						       
+//					}
 				}
 				SucaiObj.prototype.fall = function(t){
 //					TweenMax.killTweensOf(this.el);
-					var t = new TimelineMax({delay:t||0});
-					t.to(this.el,5,{
-						y:500,
-						rotation:180,
-						ease:SlowMo.ease.config(0.1, 0.4, false),
-						overwrite:3
-					})
-					.to(this.el,2,{
-						x:20,
-						ease:SlowMo.ease.config(0.1,0.4,false),
-						repeat:3,
-						yoyo:true
-					},"-=5")
-					.to(this.el,.1,{
-						x:0,
+					var temp = [-1,1];
+					var t = new TimelineMax({
+						delay:t||2,				
 						onComplete:this.reGrow,
 						onCompleteParams:[this]
+					});
+					t.to(this.el,10,{
+						y:height,
+//						x:width,
+//						rotation:randomInRange(30,180)*temp[Math.round(Math.random())],
+//						ease:RoughEase.ease.config({ template:  Power0.easeNone, strength: 0.5, points: 10, taper: "out", randomize: false, clamp: false}),
+						overwrite:3
 					})
+					.to(this.el,20,{
+						x:randomInRange(10,20),
+						ease:Elastic.easeOut.config(3, 0.1)
+					},"-=9.8")
+					.to(this.el,6,{
+						rotation:randomInRange(60,180),
+//						ease:Elastic.easeOut.config(3, 0.1)
+					},"-=20")
+//					.to(this.el,5,{
+//						x:"+=" + 5,
+//						ease:SlowMo.ease.config(0.1,0.4,false),
+//						repeat:3,
+//						yoyo:true
+//					},"-=5")
+//					.to(this.el,.1,{
+//						x:0,
+//						onComplete:this.reGrow,
+//						onCompleteParams:[this]
+//					})
 				}
 				
 				SucaiObj.prototype.reGrow = function(obj){
 					obj.isFall = false
-					obj.grow(randomInRange(5,20),randomInRange(1,5),1, {
+					obj.grow(randomInRange(5,10),randomInRange(1,5),1, {
 							transform:'matrix(0,0,0,0,' + obj.x + ',' + obj.y + ')',
 							scale:0
 					});
@@ -185,6 +215,7 @@
 					if(Math.abs(x-sucai.x)<20 && Math.abs(y-sucai.y)<20){
 //						console.log(Math.abs(x-sucai.x)+"__"+Math.abs(y-sucai.y))
 						sucai.shake(5,0);
+//						console.log(TweenMax.isTweening(sucai))
 						if(Math.random()>0.9){
 							sucai.isFall = true;
 							sucai.fall(0.5);
@@ -218,6 +249,7 @@
 
 			setInterval(function(){
 				sucaiArr.forEach(function(sucai){
+//					console.log(TweenMax.isTweening(sucai))
 					if(Math.random()>0.5 && !TweenMax.isTweening(sucai)){
 						sucai.shake(-5,0.5);
 						if(Math.random()>0.85){
@@ -226,7 +258,7 @@
 						}
 					}
 				});
-			},25000)
+			},10000)
 		};
 	</script>
 
