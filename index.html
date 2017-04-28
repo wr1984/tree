@@ -20,8 +20,7 @@
 				left: 0;
 			}
 			#svg{
-				position: relative;
-				overflow: hidden;
+				position: absolute;
 				/*height: 100%;*/
 				/*width: 1000px;
 				height: 500px;*/
@@ -29,13 +28,7 @@
 				/*background-size:auto 100%;
 				background-repeat:no-repeat;*/
 			}
-			#pmd{
-				position: absolute;
-			}
-			embed{
-				float: left;
-			}
-			#svg>.logo{
+			#box>.logo{
 				position: absolute;
 				width: 100%;
 				height: 100%;
@@ -45,16 +38,29 @@
 				background-size: 40% 40%;
 				background-repeat: no-repeat;
 			}
+			#box{
+				position: relative;
+				overflow: hidden;
+			}
+			#bg{
+				position: absolute;
+				height: 100%;
+				background-image: url(img/tree-3200x786.png);
+				background-position: center;	
+				background-size: 100% 100%;
+				background-repeat: no-repeat;
+			}
 		</style>
 	</head>
 
 	<body>
 		<!--<img src="img/Tree.png" />-->
 		<!--<svg width="100%" height="100%" viewBox="0 0 1000 800" version="1.1" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMinYMin meet">-->
-		<div id="svg" >
-			<div id='pmd'>
-				<embed id="tree-bg" src="img/tree-bg-d.svg" width="50%" height="100%"></embed>
-				<embed id="tree-bg2" src="img/tree-bg-d.svg" width="50%" height="100%"></embed>
+		<div id="box">
+			<div id="bg"></div>
+			<div id="svg" >
+					<embed id="tree-bg" src="img/tree-bg-d.svg" width="100%" height="100%"></embed>
+					<!--<embed id="tree-bg2" src="img/tree-bg-d.svg" width="50%" height="100%"></embed>-->
 			</div>
 			<div class="logo"></div>
 		</div>
@@ -68,7 +74,7 @@
 			var width = window.innerWidth;
 			var height = window.innerHeight;
 			var windowScale = width/height;
-			var svgBox = document.querySelector('#svg');
+			var svgBox = document.querySelector('#box');
 //			svgBox.style.overflow = 'hidden';
 			svgBox.style.width = width + 'px';
 			svgBox.style.height = height + 'px';
@@ -78,10 +84,10 @@
 			
 			
 			var embed = document.querySelector('#tree-bg');
-			var embed2 = document.querySelector('#tree-bg2');
+//			var embed2 = document.querySelector('#tree-bg2');
 			
 			var svg_bg = embed.getSVGDocument().querySelector('#svg');
-			var svg_bg2 = embed2.getSVGDocument().querySelector('#svg');
+//			var svg_bg2 = embed2.getSVGDocument().querySelector('#svg');
 			var svg_width = svg_bg.getAttribute('viewBox').split(" ")[2];
 			var svg_height = svg_bg.getAttribute('viewBox').split(" ")[3];
 			var scaleX = svg_width/width;
@@ -89,35 +95,10 @@
 			
 			//跑马灯
 //			svgBox.innerHTML += svgBox.innerHTML;
-			let pmd = document.getElementById('pmd');
-			pmd.style.width  = width*2 + 'px';
-			var left = null;
-			setInterval(function(){
-				left -= 0.1;
-				if(left < -pmd.offsetWidth/2){
-					left=0;
-				}
-				pmd.style.left = left + "px";
-			},60/1000)
-			
-//			var yz6 = svg_bg.getElementById('yz6');
-//			var yz7 = svg_bg.getElementById('yz7');
-//			var yz8 = svg_bg.getElementById('yz8');
-//			var yz9 = svg_bg.getElementById('yz9');
-//			var yz10 = svg_bg.getElementById('yz10');
-//			var sg5 = svg_bg.getElementById('sg5');
-//			
-//			Tween.to(yz6,2,{
-//				scale:1,
-//				transformOrigin:"0% 100%"
-//			})
-			
-			
-//			var sg2 = svg_bg.getElementById('sg2');
-//			var sg3 = svg_bg.getElementById('sg3');
-//			var sg4 = svg_bg.getElementById('sg4');
-//			var bg = svg_bg.getElementById('bg');
-			
+			let bg = document.getElementById('bg');
+			let yzsvg = document.getElementById('svg');
+			bg.style.width = width*2 + 'px';
+			yzsvg.style.width  = width*2 + 'px';
 			
 			
 			var yzOrigin = ["0% 80%","90% 90%","10% 90%","10% 90%","90% 10%","0% 100%","0% 100%","100% 100%","100% 100%","100% 100%"];
@@ -126,6 +107,31 @@
 			var yzArr = initSucai('yz', 10, yzOrigin,svg_bg);
 			var sgArr = initSucai('sg', 5, sgOrigin,svg_bg);
 			var sucaiArr = yzArr.concat(sgArr);
+			
+			var left = null;
+			setInterval(function(){
+				left -= 0.1;
+				if(left < -bg.offsetWidth/2){
+					left=0;
+				}
+				yzsvg.style.left = left + 'px';
+				bg.style.left = left + 'px';
+				
+				var l = Math.abs(Math.floor(left));
+				sucaiArr.forEach(function(sucai){
+					var x = Math.floor(sucai.x);
+					if(l === x){
+//						TweenMax.set(sucai.el,{
+//							transform:'matrix(0,0,0,0,' + sucai.x + width + ',' + obj.y + ')',
+//						})
+					}
+				});
+				
+				
+			},60/1000);
+			console.log(sucaiArr[0].el);
+//			console.log(sucaiArr[1].el);
+			
 			
 			yzArr.forEach(function(yz){
 				yz.init();
@@ -136,18 +142,21 @@
 				sg.grow(randomInRange(5,10),randomInRange(1,5));
 			});
 			
-			var yzArr2 = initSucai('yz', 10, yzOrigin,svg_bg2);
-			var sgArr2 = initSucai('sg', 5, sgOrigin,svg_bg2);
-			var sucaiArr2 = yzArr2.concat(sgArr2);
 			
-			yzArr2.forEach(function(yz){
-				yz.init();
-				yz.grow(randomInRange(5,20),randomInRange(1,5));
-			});
-			sgArr2.forEach(function(sg){
-				sg.init();
-				sg.grow(randomInRange(5,10),randomInRange(1,5));
-			});
+			
+			
+//			var yzArr2 = initSucai('yz', 10, yzOrigin,svg_bg2);
+//			var sgArr2 = initSucai('sg', 5, sgOrigin,svg_bg2);
+//			var sucaiArr2 = yzArr2.concat(sgArr2);
+//			
+//			yzArr2.forEach(function(yz){
+//				yz.init();
+//				yz.grow(randomInRange(5,20),randomInRange(1,5));
+//			});
+//			sgArr2.forEach(function(sg){
+//				sg.init();
+//				sg.grow(randomInRange(5,10),randomInRange(1,5));
+//			});
 			
 			
 			
@@ -194,8 +203,6 @@
 //						console.log(yz1)
 				}
 				SucaiObj.prototype.shake = function(s,t){
-					
-					
 					if(!this.isFall){
 //					  TweenMax.killTweensOf(this.el);
 					  new TimelineMax()
@@ -203,19 +210,6 @@
 //					  .to(this.el, 1, {rotation:0})
 					       
 					}
-//					if(!this.isFall){
-//					  TweenMax.killTweensOf(this.el);
-//					  new TimelineMax().to(this.el, .2+t||0, {rotation:10+s||0, ease:Linear.easeInOut})
-//								       .to(this.el, .3+t||0, {rotation:-10-s||0, ease:Linear.easeInOut})
-//								       .to(this.el, .4+t||0, {rotation:8+s||0, ease:Linear.easeInOut})
-//								       .to(this.el, .5+t||0, {rotation:-8-s||0, ease:Linear.easeInOut})
-//								       .to(this.el, .6+t||0, {rotation:6+s||0, ease:Linear.easeInOut})
-//								       .to(this.el, .7+t||0, {rotation:-6-s||0, ease:Linear.easeInOut})
-//								       .to(this.el, .8+t||0, {rotation:2, ease:Linear.easeInOut})
-//								       .to(this.el, .9+t||0, {rotation:-2, ease:Linear.easeInOut})
-//								       .to(this.el, .9+t||0, {rotation:1, ease:Linear.easeInOut})
-//								       .to(this.el, 1+t||0, {rotation:0, ease:Linear.easeInOut})						       
-//					}
 				}
 				SucaiObj.prototype.fall = function(t){
 //					TweenMax.killTweensOf(this.el);
@@ -240,17 +234,6 @@
 						rotation:randomInRange(60,180),
 //						ease:Elastic.easeOut.config(3, 0.1)
 					},"-=20")
-//					.to(this.el,5,{
-//						x:"+=" + 5,
-//						ease:SlowMo.ease.config(0.1,0.4,false),
-//						repeat:3,
-//						yoyo:true
-//					},"-=5")
-//					.to(this.el,.1,{
-//						x:0,
-//						onComplete:this.reGrow,
-//						onCompleteParams:[this]
-//					})
 				}
 				
 				SucaiObj.prototype.reGrow = function(obj){
@@ -281,18 +264,18 @@
 					});
 //				}
 				
-					sucaiArr2.forEach(function(sucai){
-	//					if(Math.abs(x-sucai.x)<20 && Math.abs(y-sucai.y)<20){
-	//						console.log(Math.abs(x-sucai.x)+"__"+Math.abs(y-sucai.y))
-							sucai.shake(5,0);
-	//						console.log(TweenMax.isTweening(sucai))
-							if(Math.random()>0.9){
-								sucai.isFall = true;
-								sucai.fall(0.5);
-							}
-	//					}
-					});
-				
+//					sucaiArr2.forEach(function(sucai){
+//	//					if(Math.abs(x-sucai.x)<20 && Math.abs(y-sucai.y)<20){
+//	//						console.log(Math.abs(x-sucai.x)+"__"+Math.abs(y-sucai.y))
+//							sucai.shake(5,0);
+//	//						console.log(TweenMax.isTweening(sucai))
+//							if(Math.random()>0.9){
+//								sucai.isFall = true;
+//								sucai.fall(0.5);
+//							}
+//	//					}
+//					});
+//				
 				}
 				
 			}
