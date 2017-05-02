@@ -35,7 +35,7 @@
 				z-index: 999;
 				background-image: url(img/tree-logo.png);
 				background-position: center;	
-				background-size: 40% 40%;
+				background-size: 30% 40%;
 				background-repeat: no-repeat;
 			}
 			#box{
@@ -59,7 +59,7 @@
 		<div id="box">
 			<div id="bg"></div>
 			<div id="svg" >
-					<embed id="tree-bg" src="img/tree-bg-d.svg" width="100%" height="100%"></embed>
+					<embed id="tree-bg" src="img/tree-yz-3200x786.svg" width="100%" height="100%"></embed>
 					<!--<embed id="tree-bg2" src="img/tree-bg-d.svg" width="50%" height="100%"></embed>-->
 			</div>
 			<div class="logo"></div>
@@ -101,12 +101,13 @@
 			yzsvg.style.width  = width*2 + 'px';
 			
 			
-			var yzOrigin = ["0% 80%","90% 90%","10% 90%","10% 90%","90% 10%","0% 100%","0% 100%","100% 100%","100% 100%","100% 100%"];
-			var sgOrigin = ["0% 100%","10% 100%","0% 100%","0% 100%","0% 100%"];
-			
-			var yzArr = initSucai('yz', 10, yzOrigin,svg_bg);
-			var sgArr = initSucai('sg', 5, sgOrigin,svg_bg);
-			var sucaiArr = yzArr.concat(sgArr);
+			var yzOrigin = ["10% 100%","100% 90%","100% 100%","100% 90%","0% 100%","100% 100%","100% 90%","0% 100%","100% 100%"];
+			var hdOringin = ["50% 50%","50% 50%"];
+
+			var hdArr1 = initSucai('hd1_','hd2_',1,hdOringin,svg_bg);
+//			var hdArr2 = initSucai('hd2_',1,hdOringin,svg_bg);
+			var sucai1Arr = initSucai('yz1_','yz2_',9, yzOrigin,svg_bg);
+//			var sucai2Arr = initSucai('yz2_', 9, yzOrigin,svg_bg);
 			
 			var left = null;
 			setInterval(function(){
@@ -116,74 +117,46 @@
 				}
 				yzsvg.style.left = left + 'px';
 				bg.style.left = left + 'px';
-				
-				var l = Math.abs(Math.floor(left));
-				sucaiArr.forEach(function(sucai){
-					var x = Math.floor(sucai.x);
-					if(l === x){
-//						TweenMax.set(sucai.el,{
-//							transform:'matrix(0,0,0,0,' + sucai.x + width + ',' + obj.y + ')',
-//						})
-					}
-				});
-				
-				
 			},60/1000);
-			console.log(sucaiArr[0].el);
-//			console.log(sucaiArr[1].el);
+//			console.log(sucai1Arr[0].el);
+//			console.log(sucai1Arr[0].el2);
 			
 			
-			yzArr.forEach(function(yz){
+			sucai1Arr.forEach(function(yz){
 				yz.init();
 				yz.grow(randomInRange(5,20),randomInRange(1,5));
 			});
-			sgArr.forEach(function(sg){
-				sg.init();
-				sg.grow(randomInRange(5,10),randomInRange(1,5));
-			});
+			hdArr1.forEach(function(hd){
+				hd.init();
+				hd.grow(0.1,0.1);
+			})
 			
-			
-			
-			
-//			var yzArr2 = initSucai('yz', 10, yzOrigin,svg_bg2);
-//			var sgArr2 = initSucai('sg', 5, sgOrigin,svg_bg2);
-//			var sucaiArr2 = yzArr2.concat(sgArr2);
-//			
-//			yzArr2.forEach(function(yz){
-//				yz.init();
-//				yz.grow(randomInRange(5,20),randomInRange(1,5));
-//			});
-//			sgArr2.forEach(function(sg){
-//				sg.init();
-//				sg.grow(randomInRange(5,10),randomInRange(1,5));
-//			});
-			
-			
-			
-			
-			
-			function initSucai(name,count,origin,svg){
+			function initSucai(name1,name2,count,origin,svg){
 				var arr = [];
 				for(var i = 0; i<count; i++){
-					arr.push(new SucaiObj(name,i+1,origin,svg));
+					arr.push(new SucaiObj(name1,name2,i,origin,svg));
 				}
 				return arr;
 			}
 			
-			function SucaiObj(name,index,origin,svg){
+			function SucaiObj(name1,name2,index,origin,svg){
 				
-				this.id = name+index;
-				this.name = name;
-				this.el = svg.getElementById(this.id); 
+//				this.id = name+index;
+//				this.name = name;
+				this.el = svg.getElementById(name1+ index); 
+				this.el2 = svg.getElementById(name2+ index);
+				
+				console.log(this.el)
+				console.log(this.el2)
 				this.x;
 				this.y;
-				this.opacity = 0.8;
+				this.opacity = 0.9;
 				this.scale = 0;
-				this.transformOrigin = origin[index-1];
+				this.transformOrigin = origin[index];
 				this.isFall = false;
 			
 				SucaiObj.prototype.init = function(){
-					TweenMax.set(this.el,{
+					TweenMax.set([this.el,this.el2],{
 						opacity: this.opacity,
 						scale: this.scale,
 						transformOrigin: this.transformOrigin
@@ -191,57 +164,65 @@
 					this.x = this.el.getAttribute('data-svg-origin').split(" ")[0];
 					this.y = this.el.getAttribute('data-svg-origin').split(" ")[1];
 				}
-				SucaiObj.prototype.grow = function(growTime,delayTime,scale,startAt){
+				SucaiObj.prototype.grow = function(growTime,delayTime,scale){
 					
-						TweenMax.to(this.el,growTime || 10,{
+						TweenMax.to([this.el,this.el2],growTime || 10,{
 							scale: scale || 1,
 							ease:Linear.easeNone,
-							delay:delayTime || 2,
-							startAt:startAt
+							delay:delayTime || 2
 						});
 						
 //						console.log(yz1)
 				}
-				SucaiObj.prototype.shake = function(s,t){
+				SucaiObj.prototype.shake = function(){
 					if(!this.isFall){
 //					  TweenMax.killTweensOf(this.el);
 					  new TimelineMax()
-					  .to(this.el, 10, {rotation:5, ease:Elastic.easeOut.config(3, 0.1)})
-//					  .to(this.el, 1, {rotation:0})
+					  .to([this.el,this.el2], 10, {rotation:5, ease:Elastic.easeOut.config(3, 0.1)})
+//					  .to(this.el, .1, {rotation:0})
 					       
 					}
 				}
 				SucaiObj.prototype.fall = function(t){
-//					TweenMax.killTweensOf(this.el);
+					TweenMax.killTweensOf(this.el);
+					TweenMax.killTweensOf(this.el);
 					var temp = [-1,1];
 					var t = new TimelineMax({
 						delay:t||2,				
 						onComplete:this.reGrow,
 						onCompleteParams:[this]
 					});
-					t.to(this.el,10,{
-						y:height,
+					t.to([this.el,this.el2],10,{
+						y:height+200,
 //						x:width,
 //						rotation:randomInRange(30,180)*temp[Math.round(Math.random())],
 //						ease:RoughEase.ease.config({ template:  Power0.easeNone, strength: 0.5, points: 10, taper: "out", randomize: false, clamp: false}),
-						overwrite:3
+//						overwrite:3
 					})
-					.to(this.el,20,{
-						x:randomInRange(5,20)*temp[Math.round(Math.random())],
+					.to([this.el,this.el2],15,{
+						x:randomInRange(10,20)*temp[Math.round(Math.random())],
 						ease:Elastic.easeOut.config(3, 0.1)
 					},"-=9.8")
-					.to(this.el,6,{
+					.to([this.el,this.el2],6,{
 						rotation:randomInRange(60,180),
 //						ease:Elastic.easeOut.config(3, 0.1)
-					},"-=20")
+					},"-=15")
+					.set([this.el,this.el2],{
+						x:0,
+						y:0,
+						scale:0,
+						rotation:0
+					},"+=14")
 				}
 				
 				SucaiObj.prototype.reGrow = function(obj){
-					obj.isFall = false
-					obj.grow(randomInRange(5,10),randomInRange(1,5),1, {
-							transform:'matrix(0,0,0,0,' + obj.x + ',' + obj.y + ')',
-							scale:0
-					});
+					obj.isFall = false;
+					obj.grow(randomInRange(5,10),randomInRange(1,5),1
+//					{
+//							transform:'matrix(0,0,0,0,' + obj.x + ',' + obj.y + ')',
+//							scale:0
+//					}
+					);
 				}
 			}
 			
@@ -249,18 +230,18 @@
 				var x = e.clientX * scaleX;
 				var y = e.clientY * scaleY;
 //				console.log(x,y)
-				if(Math.random()>0.991){
+				if(Math.random()>0.99){
 					
-					sucaiArr.forEach(function(sucai){
-	//					if(Math.abs(x-sucai.x)<20 && Math.abs(y-sucai.y)<20){
-	//						console.log(Math.abs(x-sucai.x)+"__"+Math.abs(y-sucai.y))
-							sucai.shake(5,0);
+					sucai1Arr.forEach(function(sucai){
+//						if(Math.abs(x-sucai.x)<50 && Math.abs(y-sucai.y)<50){
+//							console.log(Math.abs(x-sucai.x)+"__"+Math.abs(y-sucai.y))
+							sucai.shake();
 	//						console.log(TweenMax.isTweening(sucai))
-							if(Math.random()>0.99){
+							if(Math.random()>0.89){
 								sucai.isFall = true;
 								sucai.fall(0.5);
 							}
-	//					}
+//						}
 					});
 //				}
 				
@@ -303,16 +284,25 @@
 //			}
 
 			setInterval(function(){
-				sucaiArr.forEach(function(sucai){
+				sucai1Arr.forEach(function(sucai){
 //					console.log(TweenMax.isTweening(sucai))
-					if(Math.random()>0.5 && !TweenMax.isTweening(sucai)){
-						sucai.shake(-5,0.5);
+					if(Math.random()>0.9 && !TweenMax.isTweening(sucai)){
+						sucai.shake();
 						if(Math.random()>0.85){
 							sucai.isFall = true;
 							sucai.fall(2);
 						}
 					}
 				});
+				
+				hdArr1.forEach(function(hd){
+					if(Math.random()>0.5 && !TweenMax.isTweening(hd)){
+						if(Math.random()>0.5){
+							hd.isFall = true;
+							hd.fall(2);
+						}
+					}
+				})
 			},10000)
 		};
 	</script>
