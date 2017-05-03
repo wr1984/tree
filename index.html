@@ -151,6 +151,8 @@
 				this.scale = 0;
 				this.transformOrigin = origin[index];
 				this.isFall = false;
+				this.isGrow = false;
+				this.isShake = false;
 			
 				SucaiObj.prototype.init = function(){
 					TweenMax.set([this.el,this.el2],{
@@ -162,32 +164,50 @@
 //					this.y = this.el.getAttribute('data-svg-origin').split(" ")[1];
 				}
 				SucaiObj.prototype.grow = function(growTime,delayTime,scale,startAt){
-					
-						TweenMax.to([this.el,this.el2],growTime || 10,{
-							scale: scale || 1,
-							ease:Linear.easeNone,
-							delay:delayTime || 2,
-							startAt:startAt
-						});
+					this.isGrow = true;
+					TweenMax.to([this.el,this.el2],growTime || 10,{
+						scale: scale || 1,
+						ease:Linear.easeNone,
+						delay:delayTime || 2,
+						startAt:startAt,
+						onComplete:function(me){me.isGrow = false},
+						onCompleteParams:[this]
+					});
 						
 //						console.log(yz1)
 				}
 				SucaiObj.prototype.shake = function(){
-					if(!this.isFall){
+					if(!this.isFall && !this.isGrow && !this.isShake){
 //					  TweenMax.killTweensOf(this.el);
-					  new TimelineMax()
-					  .to([this.el,this.el2], 10, {rotation:5, ease:Elastic.easeOut.config(3, 0.1)})
+						this.isShake = true;
+					  new TimelineMax().to([this.el,this.el2],0.2,{
+					  	rotation:10
+					  })
+					  .to([this.el,this.el2], 10, {
+					  	rotation:0,
+					  	ease:Elastic.easeOut.config(3, 0.1),
+					  	onComplete:function(me){
+					  		me.isShake = false;
+					  		if(Math.random() > 0.8){
+					  			me.fall(); 
+					  		}
+					  	},
+						onCompleteParams:[this]
+					  
+					  })
 //					  .to(this.el, .1, {rotation:0})
 					       
 					}
 				}
 				SucaiObj.prototype.fall = function(){
-//					this.isFall = true;
-					TweenMax.killTweensOf(this.el);
-					TweenMax.killTweensOf(this.el2);
+					if(this.isGrow || this.isFall){return};
+					
+					this.isFall = true;
+//					TweenMax.killTweensOf(this.el);
+//					TweenMax.killTweensOf(this.el2);
 					var temp = [-1,1];
 					var t = new TimelineMax({
-						delay:t||2,				
+//						delay:1,				
 						onComplete:this.reGrow,
 						onCompleteParams:[this]
 					});
@@ -232,17 +252,18 @@
 				var x = e.clientX * scaleX;
 				var y = e.clientY * scaleY;
 //				console.log(x,y)
-				if(Math.random()>0.99){
+				if(Math.random()>0.8){
 					
 					sucai1Arr.forEach(function(sucai){
 //						if(Math.abs(x-sucai.x)<50 && Math.abs(y-sucai.y)<50){
 //							console.log(Math.abs(x-sucai.x)+"__"+Math.abs(y-sucai.y))
-							sucai.shake();
+								sucai.shake();
+								
 	//						console.log(TweenMax.isTweening(sucai))
-							if(Math.random()>0.89 && !sucai.isFall){
-								sucai.isFall = true;
-								sucai.fall();
-							}
+//							if(Math.random()>0.99 && !sucai.isFall){
+////								sucai.isFall = true;
+//								sucai.fall();
+//							}
 //						}
 					});
 //				}
@@ -265,7 +286,14 @@
 			
 			let mouseEventDom = document.querySelector('.logo')
 			mouseEventDom.addEventListener('mousemove',sucaiShake,false);
-//			
+
+//			mouseEventDom.addEventListener('mouseup',mouseEvent,true);
+			mouseEventDom.addEventListener('mousedown',mouseEvent,true);
+			mouseEventDom.addEventListener('contextmenu',mouseEvent,true);
+			function mouseEvent(e){
+				e.preventDefault();
+			}
+			
 			function randomInRange(min,max){
 				return Math.round(Math.random()*(max-min+1))+min;
 			}
@@ -288,19 +316,19 @@
 			setInterval(function(){
 				sucai1Arr.forEach(function(sucai){
 //					console.log(TweenMax.isTweening(sucai))
-					if(Math.random()>0.9 && !TweenMax.isTweening(sucai)){
+					if(Math.random()>0.5 && !sucai.isShake && !sucai.isGrow && !sucai.isFall){
 						sucai.shake();
-						if(Math.random()>0.85 && !sucai.isFall){
-							sucai.isFall = true;
-							sucai.fall();
-						}
+//						if(Math.random()>0.85 && !sucai.isFall){
+////							sucai.isFall = true;
+//							sucai.fall();
+//						}
 					}
 				});
 				
 				hdArr1.forEach(function(hd){
 					if(Math.random()>0.5 && !TweenMax.isTweening(hd)){
 						if(Math.random()>0.5 && !hd.isFall){
-							hd.isFall = true;
+//							hd.isFall = true;
 							hd.fall();
 						}
 					}
