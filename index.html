@@ -13,14 +13,14 @@
 				line-height: 0;
 				font-size: 0;
 			}
-			
-			#tree-sucai {
-				position: absolute;
-				top: 0;
-				left: 0;
+			#box{
+				position: relative;
+				overflow: hidden;
 			}
-			#svg{
+			
+			.move{
 				position: absolute;
+				height: 100%;
 				/*height: 100%;*/
 				/*width: 1000px;
 				height: 500px;*/
@@ -38,17 +38,17 @@
 				background-size: 30% 40%;
 				background-repeat: no-repeat;
 			}
-			#box{
-				position: relative;
-				overflow: hidden;
-			}
 			#bg{
 				position: absolute;
 				height: 100%;
-				background-image: url(img/tree-3200x786.png);
+				/*background-image: url(img/tree-3200x786.png);
 				background-position: center;	
 				background-size: 100% 100%;
-				background-repeat: no-repeat;
+				background-repeat: no-repeat;*/
+				
+			}
+			#svg{
+				position: absolute;
 			}
 		</style>
 	</head>
@@ -57,10 +57,13 @@
 		<!--<img src="img/Tree.png" />-->
 		<!--<svg width="100%" height="100%" viewBox="0 0 1000 800" version="1.1" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMinYMin meet">-->
 		<div id="box">
-			<div id="bg"></div>
-			<div id="svg" >
-					<embed id="tree-bg" src="img/tree-yz-3200x786.svg" width="100%" height="100%"></embed>
-					<!--<embed id="tree-bg2" src="img/tree-bg-d.svg" width="50%" height="100%"></embed>-->
+			<div class="move">
+				<div id="bg">
+					<img src="img/tree-3200x786.png"/>
+				</div>
+				<div id="svg" >
+						<embed id="tree-bg" src="img/tree-yz-3200x786.svg" width="100%" height="100%"></embed>
+				</div>
 			</div>
 			<div class="logo"></div>
 		</div>
@@ -97,9 +100,11 @@
 //			svgBox.innerHTML += svgBox.innerHTML;
 			let bg = document.getElementById('bg');
 			let yzsvg = document.getElementById('svg');
+			let move = document.querySelector('.move');
 			bg.style.width = width*2 + 'px';
 			yzsvg.style.width  = width*2 + 'px';
-			
+			yzsvg.style.height = height+'px';
+			move.style.width  = width*2 + 'px';
 			
 			var yzOrigin = ["10% 100%","100% 90%","100% 100%","100% 90%","0% 100%","100% 100%","100% 90%","0% 100%","100% 100%"];
 			var hdOringin = ["50% 50%","50% 50%"];
@@ -112,11 +117,10 @@
 			var left = null;
 			setInterval(function(){
 				left -= 0.1;
-				if(left < -bg.offsetWidth/2){
+				if(left < -move.offsetWidth/2){
 					left=0;
 				}
-				yzsvg.style.left = left + 'px';
-				bg.style.left = left + 'px';
+				move.style.left = left + 'px';
 			},60/1000);
 //			console.log(sucai1Arr[0].el);
 //			console.log(sucai1Arr[0].el2);
